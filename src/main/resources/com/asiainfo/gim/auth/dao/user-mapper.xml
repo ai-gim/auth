@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asiainfo.gim.auth.dao.UserDao">
+	<resultMap id="User" type="com.asiainfo.gim.auth.domain.User">
+		<id property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="properties" column="properties" javaType="java.util.Map" jdbcType="VARCHAR"/>
+		<result property="account" column="account"/>
+		<result property="password" column="password"/>
+		<result property="state" column="state"/>
+		<result property="email" column="email"/>
+		<result property="time" column="time"/>
+		<result property="role.id" column="roleId"/>
+		<result property="role.name" column="roleName"/>
+		<result property="role.description" column="roleDescription"/>
+		<result property="role.properties" column="roleProperties" javaType="java.util.Map" jdbcType="VARCHAR"/>
+		<result property="group.id" column="groupId"/>
+		<result property="group.name" column="groupName"/>
+		<result property="group.description" column="groupDescription"/>
+		<result property="group.properties" column="groupProperties" javaType="java.util.Map" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertUser" parameterType="com.asiainfo.gim.auth.domain.User" 
+		useGeneratedKeys="true" keyProperty="id">
+		insert into auth_user(name, description, properties, account, password, state, email, time)
+		value(#{name}, #{description}, #{properties, jdbcType=VARCHAR}, #{account}, #{password}, #{state}, #{email}, #{time});
+	</insert>
+	
+	<insert id="insertUserAndRoleRelation" parameterType="com.asiainfo.gim.auth.domain.User">
+		insert into auth_user_role_relation value(#{id}, #{role.id});
+	</insert>
+	
+	<insert id="insertUserAndGroupRelation" parameterType="com.asiainfo.gim.auth.domain.User">
+		insert into auth_user_group_relation value(#{id}, #{group.id});
+	</insert>
+	
+	<update id="updateUser" parameterType="com.asiainfo.gim.auth.domain.User">
+		update auth_user set name = #{name}, description = #{description}, properties = #{properties, jdbcType=VARCHAR},
+		state = #{state}, email = #{email}, password = #{password}  where id = #{id};
+	</update>
+	
+	<update id="updateUserWithRole" parameterType="com.asiainfo.gim.auth.domain.User">
+		update auth_user_role_relation set role_id = #{role.id} where user_id = #{id};
+	</update>
+	
+	<update id="updateUserWithGroup" parameterType="com.asiainfo.gim.auth.domain.User">
+		update auth_user_group_relation set group_id = #{group.id} where user_id = #{id};
+	</update>
+	
+	<select id="listUsers" resultMap="User" parameterType="com.asiainfo.gim.auth.domain.query.UserQueryCondition">
+		select u.*,r.id roleId,r.name roleName,r.description roleDescription,r.properties roleProperties,
+		g.id groupId,g.name groupName,g.description groupDescription,g.properties groupProperties 
+		from auth_user u
+		left join auth_user_role_relation urr on u.id = urr.user_id
+		left join auth_role r on r.id = urr.role_id
+		left join auth_user_group_relation ugr on u.id = ugr.user_id
+		left join auth_group g on g.id = ugr.group_id
+		<where>
+			<if test="roleId != null">
+				r.id = #{roleId}
+			</if>
+			<if test="groupId != null">
+				and g.id = #{groupId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findUserByID" resultMap="User" parameterType="java.lang.Integer">
+		select u.*,r.id roleId,r.name roleName,r.description roleDescription,r.properties roleProperties,
+		g.id groupId,g.name groupName,g.description groupDescription,g.properties groupProperties 
+		from auth_user u
+		left join auth_user_role_relation urr on u.id = urr.user_id
+		left join auth_role r on r.id = urr.role_id
+		left join auth_user_group_relation ugr on u.id = ugr.user_id
+		left join auth_group g on g.id = ugr.group_id
+		where u.id = #{id};
+	</select>
+	
+	<select id="findUserByAccount" resultMap="User" parameterType="java.lang.String">
+		select u.*,r.id roleId,r.name roleName,r.description roleDescription,r.properties roleProperties,
+		g.id groupId,g.name groupName,g.description groupDescription,g.properties groupProperties 
+		from auth_user u
+		left join auth_user_role_relation urr on u.id = urr.user_id
+		left join auth_role r on r.id = urr.role_id
+		left join auth_user_group_relation ugr on u.id = ugr.user_id
+		left join auth_group g on g.id = ugr.group_id
+		where u.account = #{account};
+	</select>
+
+	<delete id="deleteUser" parameterType="java.lang.Integer">
+		delete from auth_user where id = #{id};
+	</delete>
+	
+	<delete id="deleteUserAndRole" parameterType="java.lang.Integer">
+		delete from auth_user_role_relation where user_id = #{id};
+	</delete>
+	
+	<delete id="deleteUserAndGroup" parameterType="java.lang.Integer">
+		delete from auth_user_group_relation where user_id = #{id};
+	</delete>
+	
+</mapper>

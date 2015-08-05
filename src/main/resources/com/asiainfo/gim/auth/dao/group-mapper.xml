@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asiainfo.gim.auth.dao.GroupDao">
+	<resultMap id="Group" type="com.asiainfo.gim.auth.domain.Group">
+		<id property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="properties" column="properties" javaType="java.util.Map" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertGroup" parameterType="com.asiainfo.gim.auth.domain.Group">
+		insert into auth_group(name, description, properties) value(#{name}, #{description}, #{properties, jdbcType=VARCHAR});
+	</insert>
+	
+	<update id="updateGroup" parameterType="com.asiainfo.gim.auth.domain.Group">
+		update auth_group set name = #{name}, description = #{description}, properties = #{properties, jdbcType=VARCHAR} where id = #{id};
+	</update>
+	
+	<select id="listGroups" resultMap="Group">
+		select * from auth_group;
+	</select>
+	
+	<select id="findGroupByID" resultMap="Group" parameterType="java.lang.Integer">
+		select * from auth_group where id = #{id};
+	</select>
+	
+	<select id="findGroupByName" resultMap="Group" parameterType="java.lang.String">
+		select * from auth_group where name = #{name};
+	</select>
+
+	<delete id="deleteGroup" parameterType="java.lang.Integer">
+		delete from auth_group where id = #{id};
+	</delete>
+	
+</mapper>

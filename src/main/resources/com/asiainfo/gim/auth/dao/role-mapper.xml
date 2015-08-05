@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asiainfo.gim.auth.dao.RoleDao">
+	<resultMap id="Role" type="com.asiainfo.gim.auth.domain.Role">
+		<id property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="properties" column="properties" javaType="java.util.Map" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertRole" parameterType="com.asiainfo.gim.auth.domain.Role">
+		insert into auth_role(name, description, properties) value(#{name}, #{description}, #{properties, jdbcType=VARCHAR});
+	</insert>
+	
+	<update id="updateRole" parameterType="com.asiainfo.gim.auth.domain.Role">
+		update auth_role set name = #{name}, description = #{description}, properties = #{properties, jdbcType=VARCHAR} where id = #{id};
+	</update>
+	
+	<select id="listRoles" resultMap="Role">
+		select * from auth_role;
+	</select>
+	
+	<select id="findRoleByID" resultMap="Role" parameterType="java.lang.Integer">
+		select * from auth_role where id = #{id};
+	</select>
+	
+	<select id="findRoleByName" resultMap="Role" parameterType="java.lang.String">
+		select * from auth_role where name = #{name};
+	</select>
+
+	<delete id="deleteRole" parameterType="java.lang.Integer">
+		delete from auth_role where id = #{id};
+	</delete>
+	
+</mapper>

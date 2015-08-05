@@ -1,0 +1,24 @@
+#!/bin/bash
+
+JAVA_OPTS="-Xms128m -Xmx256m -XX:PermSize=64m -XX:MaxPermSize=128m"
+JDWP_OPTS=
+
+if [ "$1" == "jdwp" ] ;then
+	JDWP_OPTS="-Xdebug -server -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1002"
+	shift
+fi
+
+if [ ! -n "$1" -o "$1" == "start" ] ;then
+	java $JAVA_OPTS $JDWP_OPTS -jar /usr/local/lib/gim/auth/auth.jar>log 2>&1 &
+elif [ "$1" == run ] ;then
+	java $JAVA_OPTS $JDWP_OPTS -jar /usr/local/lib/gim/auth/auth.jar
+elif [ "$1" == "stop" ] ;then
+	`ps -ef | grep auth.jar | awk 'NR==1{print $2}' | xargs kill -9`
+elif [ "$1" == "status" ] ;then
+	PID=`(ps -ef | grep auth.jar | grep -v grep | awk 'NR==1{print $2}')`
+	if [ "$PID" == "" ]; then
+		echo "auth service is not running"
+	else
+		echo "auth service is running, PID is" "$PID"
+	fi
+fi

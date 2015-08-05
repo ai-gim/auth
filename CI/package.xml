@@ -1,0 +1,27 @@
+<project name="gim-auth-package" default="build" basedir="..">
+	
+	<property name="VERSION" value="1.0"></property>
+	
+	<target name="prepare">
+		<delete dir="temp"></delete>
+		<mkdir dir="temp"/>
+		<mkdir dir="temp/auth"/>
+	</target>
+	
+	<target name="copyfile">
+		<copydir dest="temp/auth/bin" src="bin"></copydir>
+		<copydir dest="temp/auth/conf" src="conf"></copydir>
+		<copy tofile="temp/auth/auth.jar" file="target/auth-${VERSION}.jar"></copy>
+	</target>
+	
+	<target name="package">
+		<zip destfile="temp/auth.zip" basedir="temp"></zip>
+	</target>
+	
+	<target name="build">
+		<antcall target="prepare"></antcall>
+		<antcall target="copyfile"></antcall>
+		<antcall target="package"></antcall>
+	</target>
+	
+</project>

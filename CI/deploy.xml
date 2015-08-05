@@ -1,0 +1,28 @@
+<project name="gim-auth-deploy" default="build" basedir="..">
+	
+	<property name="USER" value="root"></property>
+	<property name="PASSWD" value="123456"></property>
+	<property name="HOST" value="172.16.102.122"></property>
+	
+	<target name="deploy">
+		<scp todir="${USER}:${PASSWD}@${HOST}:/usr/local/lib/gim" trust="true">
+			<fileset dir="temp">
+				<include name="auth.zip"/>
+			</fileset>
+		</scp>
+		<sshexec host="${HOST}" username="${USER}"  password="${PASSWD}" trust="true" command="
+			cd /usr/local/lib/gim;
+			rm -rf auth;
+			unzip auth.zip;
+			rm -rf auth.zip;
+			cd auth/bin;
+			chmod 755 *;
+			./gim-auth stop;
+			./gim-auth start;
+			"/>
+	</target>
+	
+	<target name="build">
+		<antcall target="deploy"></antcall>
+	</target>
+</project>
