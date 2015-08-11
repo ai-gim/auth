@@ -13,9 +13,14 @@ if [ ! -n "$1" -o "$1" == "start" ] ;then
 elif [ "$1" == run ] ;then
 	java $JAVA_OPTS $JDWP_OPTS -jar /usr/local/lib/gim/auth/auth.jar
 elif [ "$1" == "stop" ] ;then
-	`ps -ef | grep auth.jar | awk 'NR==1{print $2}' | xargs kill -9`
+	PID=`(ps -ef | grep auth.jar | grep -v grep | awk '{print $2}')`
+	if [ "$PID" == "" ]; then
+		echo "auth service is not running"
+	else
+		ps -ef | grep auth.jar | grep -v grep | awk '{print $2}' | xargs kill -9
+	fi
 elif [ "$1" == "status" ] ;then
-	PID=`(ps -ef | grep auth.jar | grep -v grep | awk 'NR==1{print $2}')`
+	PID=`(ps -ef | grep auth.jar | grep -v grep | awk '{print $2}')`
 	if [ "$PID" == "" ]; then
 		echo "auth service is not running"
 	else
