@@ -15,6 +15,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.asiainfo.gim.auth.dao.UserDao;
@@ -71,15 +72,23 @@ public class UserService
 
 	public User updateUser(User user)
 	{
-		user.setPassword(DigestUtils.md5Hex(user.getPassword()));
 		userHasGroup(user);
 		
-		userDao.updateUser(user);
-		userDao.updateUserWithRole(user);
-		userDao.updateUserWithGroup(user);
+		if (StringUtils.isEmpty(user.getPassword()))
+		{
+			userDao.updateUser(user);
+			userDao.updateUserWithRole(user);
+			userDao.updateUserWithGroup(user);
+		}
+		else
+		{
+			user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+			userDao.updateUserPassword(user);
+		}
+		
 		return userDao.findUserByID(user.getId());
 	}
-
+	
 	public void deleteUser(int id)
 	{
 		userDao.deleteUser(id);

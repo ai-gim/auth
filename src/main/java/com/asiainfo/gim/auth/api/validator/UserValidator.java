@@ -51,7 +51,7 @@ public @interface UserValidator
 		{
 			if (StringUtils.equals(context.getMethod(), "POST"))
 			{
-				if (StringUtils.isEmpty(user.getAccount()))
+				if (StringUtils.isEmpty(user.getPassword()) || StringUtils.isEmpty(user.getAccount()))
 				{
 					return false;
 				}
@@ -66,7 +66,7 @@ public @interface UserValidator
 
 		private boolean validUser(User user)
 		{
-			if (StringUtils.isEmpty(user.getPassword()) || user.getState() == null)
+			if (user.getState() == null)
 			{
 				return false;
 			}

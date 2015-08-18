@@ -40,7 +40,11 @@
 	
 	<update id="updateUser" parameterType="com.asiainfo.gim.auth.domain.User">
 		update auth_user set name = #{name}, description = #{description}, properties = #{properties, jdbcType=VARCHAR},
-		state = #{state}, email = #{email}, password = #{password}  where id = #{id};
+		state = #{state}, email = #{email} where id = #{id};
+	</update>
+	
+	<update id="updateUserPassword" parameterType="com.asiainfo.gim.auth.domain.User">
+		update auth_user set password = #{password} where id = #{id};
 	</update>
 	
 	<update id="updateUserWithRole" parameterType="com.asiainfo.gim.auth.domain.User">
