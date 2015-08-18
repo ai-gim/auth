@@ -34,6 +34,8 @@ public interface UserDao
 	
 	public void updateUser(User user);
 	
+	public void updateUserPassword(User user);
+	
 	public void updateUserWithRole(User user);
 	
 	public void updateUserWithGroup(User user);
