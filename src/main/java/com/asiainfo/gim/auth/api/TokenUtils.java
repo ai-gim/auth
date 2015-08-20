@@ -8,7 +8,10 @@
  */
 package com.asiainfo.gim.auth.api;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -57,5 +60,19 @@ public class TokenUtils
 		}
 		
 		return token;
+	}
+	
+	public static void evictToken(String tokenId)
+	{
+		CacheManager cacheManager = (CacheManager) SpringContext.getBean("cacheManager");
+		Cache cache = cacheManager.getCache("TOKEN_CACHE");
+		cache.evict(tokenId);
+	}
+	
+	public static List<Object> getAllTokens()
+	{
+		CacheManager cacheManager = (CacheManager) SpringContext.getBean("cacheManager");
+		Map<Object, Object> cache = (Map<Object, Object>)cacheManager.getCache("TOKEN_CACHE").getNativeCache();
+		return new ArrayList<Object>(cache.values());
 	}
 }
