@@ -10,7 +10,22 @@
 				<include name="auth.zip"/>
 			</fileset>
 		</scp>
+		<scp todir="${USER}:${PASSWD}@172.16.101.101:/usr/local/lib/gim" trust="true">
+			<fileset dir="temp">
+				<include name="auth.zip"/>
+			</fileset>
+		</scp>
 		<sshexec host="${HOST}" username="${USER}"  password="${PASSWD}" trust="true" command="
+			cd /usr/local/lib/gim;
+			rm -rf auth;
+			unzip auth.zip;
+			rm -rf auth.zip;
+			cd auth/bin;
+			chmod 755 *;
+			./gim-auth stop;
+			./gim-auth start;
+			"/>
+		<sshexec host="172.16.101.101" username="${USER}"  password="${PASSWD}" trust="true" command="
 			cd /usr/local/lib/gim;
 			rm -rf auth;
 			unzip auth.zip;
