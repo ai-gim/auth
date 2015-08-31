@@ -9,7 +9,7 @@
 		<jersey-version>2.19</jersey-version>
 		<spring-version>3.2.13.RELEASE</spring-version>
 		<aim-version>1.0</aim-version>
-		<codec-version>2.0-SNAPSHOT</codec-version>
+		<codec-version>1.9</codec-version>
 	</properties>
 
 	<dependencies>
