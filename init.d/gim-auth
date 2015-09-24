@@ -1,0 +1,35 @@
+#!/bin/bash
+# chkconfig: - 92 75
+# description: gim auth service
+
+start() {
+/usr/local/lib/gim/auth/bin/gim-auth start
+}
+
+stop() {
+/usr/local/lib/gim/auth/bin/gim-auth stop
+}
+
+status() {
+/usr/local/lib/gim/auth/bin/gim-auth status
+}
+
+# See how we were called.
+case "$1" in
+  start)
+start
+;;
+  status)
+status
+;;
+  stop)
+stop
+;;
+  restart)
+stop
+start
+;;
+  *)
+echo $"Usage: $0 {start|stop|status|restart}"
+exit 2
+esac

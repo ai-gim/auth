@@ -1,25 +1,21 @@
 <project name="gim-auth-deploy" default="build" basedir="..">
 	
-	<property name="USER" value="root"></property>
-	<property name="PASSWD" value="123456"></property>
-	<property name="HOST" value="172.16.102.122"></property>
-	
 	<target name="deploy">
 		<scp todir="${USER}:${PASSWD}@${HOST}:/usr/local/lib/gim" trust="true">
 			<fileset dir="temp">
-				<include name="auth.zip"/>
+				<include name="auth.tar.gz"/>
 			</fileset>
 		</scp>
 		<scp todir="${USER}:${PASSWD}@172.16.101.101:/usr/local/lib/gim" trust="true">
 			<fileset dir="temp">
-				<include name="auth.zip"/>
+				<include name="auth.tar.gz"/>
 			</fileset>
 		</scp>
 		<sshexec host="${HOST}" username="${USER}"  password="${PASSWD}" trust="true" command="
 			cd /usr/local/lib/gim;
 			rm -rf auth;
-			unzip auth.zip;
-			rm -rf auth.zip;
+			unzip auth.tar.gz;
+			rm -rf auth.tar.gz;
 			cd auth/bin;
 			chmod 755 *;
 			./gim-auth stop;
@@ -28,8 +24,8 @@
 		<sshexec host="172.16.101.101" username="${USER}"  password="${PASSWD}" trust="true" command="
 			cd /usr/local/lib/gim;
 			rm -rf auth;
-			unzip auth.zip;
-			rm -rf auth.zip;
+			tar -xzvf auth.tar.gz;
+			rm -rf auth.tar.gz;
 			cd auth/bin;
 			chmod 755 *;
 			./gim-auth stop;

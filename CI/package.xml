@@ -11,11 +11,12 @@
 	<target name="copyfile">
 		<copydir dest="temp/auth/bin" src="bin"></copydir>
 		<copydir dest="temp/auth/conf" src="conf"></copydir>
+		<copydir dest="temp/auth/init.d" src="init.d"></copydir>
 		<copy tofile="temp/auth/auth.jar" file="target/auth-${VERSION}.jar"></copy>
 	</target>
 	
 	<target name="package">
-		<zip destfile="temp/auth.zip" basedir="temp"></zip>
+		<tar destfile="temp/auth.tar.gz" basedir="temp" compression="gzip"></tar>
 	</target>
 	
 	<target name="build">
