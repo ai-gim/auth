@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -30,14 +31,14 @@ public class TokenUtils
 	{
 		CacheManager cacheManager = (CacheManager) SpringContext.getBean("cacheManager");
 		Cache cache = cacheManager.getCache("TOKEN_CACHE");
-		
-		if(token.getExpired() == null)
+
+		if (token.getExpired() == null)
 		{
 			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.MINUTE, 30);
+			calendar.add(Calendar.MINUTE, NumberUtils.toInt(SpringContext.getProperty("token_expired_time"), 30));
 			token.setExpired(calendar.getTime());
 		}
-		
+
 		cache.put(token.getId(), token);
 	}
 
@@ -58,21 +59,21 @@ public class TokenUtils
 			cache.evict(tokenId);
 			return null;
 		}
-		
+
 		return token;
 	}
-	
+
 	public static void evictToken(String tokenId)
 	{
 		CacheManager cacheManager = (CacheManager) SpringContext.getBean("cacheManager");
 		Cache cache = cacheManager.getCache("TOKEN_CACHE");
 		cache.evict(tokenId);
 	}
-	
+
 	public static List<Object> getAllTokens()
 	{
 		CacheManager cacheManager = (CacheManager) SpringContext.getBean("cacheManager");
-		Map<Object, Object> cache = (Map<Object, Object>)cacheManager.getCache("TOKEN_CACHE").getNativeCache();
+		Map<Object, Object> cache = (Map<Object, Object>) cacheManager.getCache("TOKEN_CACHE").getNativeCache();
 		return new ArrayList<Object>(cache.values());
 	}
 }
