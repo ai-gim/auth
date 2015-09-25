@@ -12,6 +12,7 @@
 		<copydir dest="temp/auth/bin" src="bin"></copydir>
 		<copydir dest="temp/auth/conf" src="conf"></copydir>
 		<copydir dest="temp/auth/init.d" src="init.d"></copydir>
+		<copydir dest="temp/auth/sql" src="sql"></copydir>
 		<copy tofile="temp/auth/auth.jar" file="target/auth-${VERSION}.jar"></copy>
 	</target>
 	
